@@ -59,12 +59,12 @@ class Swarm:
                 else: 
                     child_chromosome.append(self.mutated_genes(self.pois))
         return Rover(position=Position(0,0), pois_list=child_chromosome,  genes=par2.genes) 
-    
-    #to trzeba zmienic jeszcze
+
     def cal_fitness(self):
         time = 0
         fitness_score = 0
         for rovers in self.chromosome:
-            pass # srednia cal fitness kazdego rovera moze ?
-        return fitness_score
+            fitness_score += rovers.fitness
+            time += rovers.time
+        return fitness_score / self.rovers_count, time
 
