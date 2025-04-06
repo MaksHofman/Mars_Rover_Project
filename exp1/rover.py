@@ -7,6 +7,9 @@ class Rover:
         self.pois_list = pois_list
         self.fitness, self.time = self.cal_fitness() 
 
+    def cal_path_cost(self, end_point, hour_per_distance_unit):
+        return Position.check_distance(self.position, end_point) * hour_per_distance_unit
+
     def cal_fitness(self):
         time = 0
         fitness_score = 0

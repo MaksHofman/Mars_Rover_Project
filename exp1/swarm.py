@@ -22,17 +22,18 @@ class Swarm:
     
     @classmethod
     def parent_gen_checking(cls, already_poi_list, parent_gene):
-        for i in parent_gene.pois_list:
-            if Swarm.poi_in_list_already(already_poi_list, i):
+        for i in reversed(range(len(parent_gene.pois_list))):
+            if Swarm.poi_in_list_already(already_poi_list, parent_gene.pois_list[i]):
                 parent_gene.pois_list.pop(i)
             else:
-                already_poi_list.append(i)
+                already_poi_list.append(parent_gene.pois_list[i])
         return already_poi_list, parent_gene
     
-    def check_if_rover_is_used_already(self, chromosome, rover):
+    @classmethod
+    def check_if_rover_is_used_already(cls, chromosome, rover):
         is_in_chromosome = False
         for i in chromosome:
-            if i.pois_list == rover.pois_list:
+            if i.pois_list == rover.pois_list: #tu blad
                 is_in_chromosome == True
         return is_in_chromosome
 
@@ -61,16 +62,16 @@ class Swarm:
         random.shuffle(pois)
         pois_for_rover = len(pois) // amout_of_rovers
         slices = [pois[i*pois_for_rover:(i+1)*pois_for_rover] for i in range(amout_of_rovers)]
-        return Rover(position, slices[random.randint(0, len(slices))])
+        return Rover(position, slices[random.randint(0, len(slices) -1)])
 
 
     @classmethod
     def mutated_genes(cls, pois, rover_count, position, child_chromosome):
         rover = 0
-        is_unique = False
-        while is_unique == False:
+        is_unique = True
+        while is_unique == True:
             rover = Swarm._creat_single_rover_poi_combo(pois, rover_count, position)
-            is_unique = rover.check_if_rover_is_used_already(child_chromosome)
+            is_unique = Swarm.check_if_rover_is_used_already(child_chromosome, rover)
         if rover != 0:
             return rover
 
@@ -87,7 +88,7 @@ class Swarm:
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
                     child_chromosome.append(parent_gene)  
                 else: 
-                    child_chromosome.append(Swarm.mutated_genes(gp1.pois, gp1.rovers_count, gp1.start_position, child_chromosome))
+                    child_chromosome.append(Swarm.mutated_genes(gp1.pois_list, gp1.rovers_count, gp1.start_position, child_chromosome))
             else: # to jest defoult 10% mustacji
                 if prob < 0.45: 
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
@@ -96,7 +97,7 @@ class Swarm:
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
                     child_chromosome.append(parent_gene)  
                 else: 
-                    child_chromosome.append(Swarm.mutated_genes(gp1.pois, gp1.rovers_count, gp1.start_position, child_chromosome)) #to troche podejrzane
+                    child_chromosome.append(Swarm.mutated_genes(self.pois, self.rovers_count, self.start_position, child_chromosome)) #to troche podejrzane
         return Swarm(self.start_position, child_chromosome, self.pois, self.rovers_count) 
 
     def cal_fitness(self):
