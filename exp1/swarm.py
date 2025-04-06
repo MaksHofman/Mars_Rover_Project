@@ -11,15 +11,32 @@ class Swarm:
         self.pois = pois #czesc genotypu
         self.fitness, self.time = self.cal_fitness() 
     
-    #to sie moze przydac przy mutacjach ale funkcja zostalo napisana tak o 
-    def check_if_poi_is_used_already(self, poi):
-        is_in_chromosome = False
-        for i in self.chromosome:
-            for j in i.pois_list:
-                if j == poi:
-                    is_in_chromosome = True
-        return is_in_chromosome
+
+    @classmethod
+    def poi_in_list_already(cls, list, poi):
+        is_in_list = False
+        for i in list:
+            if i == poi:
+                is_in_list = True
+        return is_in_list
     
+    @classmethod
+    def parent_gen_checking(cls, already_poi_list, parent_gene):
+        for i in parent_gene.pois_list:
+            if Swarm.poi_in_list_already(already_poi_list, i):
+                parent_gene.pois_list.pop(i)
+            else:
+                already_poi_list.append(i)
+        return already_poi_list, parent_gene
+    
+    def check_if_rover_is_used_already(self, chromosome, rover):
+        is_in_chromosome = False
+        for i in chromosome:
+            if i.pois_list == rover.pois_list:
+                is_in_chromosome == True
+        return is_in_chromosome
+
+
     @classmethod
     def create_gnome(cls, pois, amout_of_rovers, position): #trzeba sprawdzic funkcje pod kontem modulo != 0 bo smierdzi mi cos ta logika
         modulo = len(pois) % amout_of_rovers 
@@ -39,26 +56,48 @@ class Swarm:
                 gens.append(Rover(position, slices[i]))
         return gens 
     
-    #to trzeba zmienic jeszcze
-    def mate(self, par2, dynamic_mutacion:bool, stagnation: bool): 
+    @classmethod
+    def _creat_single_rover_poi_combo(cls, pois, amout_of_rovers, position):
+        random.shuffle(pois)
+        pois_for_rover = len(pois) // amout_of_rovers
+        slices = [pois[i*pois_for_rover:(i+1)*pois_for_rover] for i in range(amout_of_rovers)]
+        return Rover(position, slices[random.randint(0, len(slices))])
+
+
+    @classmethod
+    def mutated_genes(cls, pois, rover_count, position, child_chromosome):
+        rover = 0
+        is_unique = False
+        while is_unique == False:
+            rover = Swarm._creat_single_rover_poi_combo(pois, rover_count, position)
+            is_unique = rover.check_if_rover_is_used_already(child_chromosome)
+        if rover != 0:
+            return rover
+
+    def mate(self, par2, dynamic_mutacion: bool, stagnation: bool):  #
         child_chromosome = []
+        used_poi_list = []
         for gp1, gp2 in zip(self.chromosome, par2.chromosome):  
             prob = random.random()
-            if dynamic_mutacion == True and stagnation == True: #tu trzeba jakis rate moze dodac lub inaczej to rozkminic
+            if dynamic_mutacion == True and stagnation == True: #narazie to pominiemy
                 if prob < 0.45: 
-                    child_chromosome.append(gp1)  
+                    used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
+                    child_chromosome.append(parent_gene)  
                 elif prob < 0.70: 
-                    child_chromosome.append(gp2) 
+                    used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
+                    child_chromosome.append(parent_gene)  
                 else: 
-                    child_chromosome.append(self.mutated_genes(self.pois)) 
+                    child_chromosome.append(Swarm.mutated_genes(gp1.pois, gp1.rovers_count, gp1.start_position, child_chromosome))
             else: # to jest defoult 10% mustacji
-                if prob < 0.45:  
-                    child_chromosome.append(gp1)  
-                elif prob < 0.70:  
-                    child_chromosome.append(gp2) 
+                if prob < 0.45: 
+                    used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
+                    child_chromosome.append(parent_gene)  
+                elif prob < 0.70: 
+                    used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
+                    child_chromosome.append(parent_gene)  
                 else: 
-                    child_chromosome.append(self.mutated_genes(self.pois))
-        return Rover(position=Position(0,0), pois_list=child_chromosome,  genes=par2.genes) 
+                    child_chromosome.append(Swarm.mutated_genes(gp1.pois, gp1.rovers_count, gp1.start_position, child_chromosome)) #to troche podejrzane
+        return Swarm(self.start_position, child_chromosome, self.pois, self.rovers_count) 
 
     def cal_fitness(self):
         time = 0
