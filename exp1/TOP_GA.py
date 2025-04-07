@@ -10,7 +10,7 @@ Napisac sensowne experymenty
 """
 
 
-def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_eneabled):
+def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_eneabled, scalleble_mmutation_eneabled):
     Amout_of_pois = amount_of_pois
     POPULATION_SIZE = population_size
     Max_time_for_task_in_poi = 3
@@ -27,6 +27,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
     found = False
     population = [] 
     best_fitness = 0
+    best_individual =0
     for _ in range(POPULATION_SIZE): 
                 chrom = Swarm.create_gnome(poi_list, amount_of_rovers, Position(0,0)) 
                 population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers)) 
@@ -35,6 +36,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         if population[0].fitness >= best_fitness:  
             Last_best_fitness = best_fitness
             best_fitness = population[0].fitness
+            best_individual = population[0]
 
         if Last_best_fitness != best_fitness and found == True:
              found = False
@@ -59,7 +61,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         for _ in range(s): 
             parent1 = random.choice(population[:50]) 
             parent2 = random.choice(population[:50]) 
-            child = parent1.mate(parent2,False, False) 
+            child = parent1.mate(parent2, scalleble_mmutation_eneabled, found) 
             new_generation.append(child) 
 
 
@@ -70,29 +72,30 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         #print(f"Best fitness = {best_fitness}, Last fitness = {Last_best_fitness}, Geratiuon {generation}, found = {found}, gen till end = {loop_after_peak}")
       
         generation += 1
+    return best_individual
 
 def exp1():
     start_time_50poi = time.time()
-    TOP_GA_TRAIN(50,5,1000,True)
+    poi50 = TOP_GA_TRAIN(50, 5, 1000, False, True)
     end_time50poi = time.time()
     deltaTime50poi = end_time50poi - start_time_50poi
 
     print(f"Dla 50 = {deltaTime50poi}")
 
     start_time_100poi = time.time()
-    TOP_GA_TRAIN(100,10,1000,True)
+    TOP_GA_TRAIN(100,5,1000, False, True)
     end_time100poi = time.time()
     deltaTime100poi = end_time100poi - start_time_100poi
     print(f"Dla 100 = {deltaTime100poi}")
 
     start_time_200poi = time.time()
-    TOP_GA_TRAIN(200,20,1000,True)
+    TOP_GA_TRAIN(200,10,1000, False, True)
     end_time200poi = time.time()
     deltaTime200poi = end_time200poi - start_time_200poi
     print(f"Dla 200 = {deltaTime200poi}")
 
     start_time_500poi = time.time()
-    TOP_GA_TRAIN(500,50,1000,True)
+    TOP_GA_TRAIN(500,15,1000, False, True)
     end_time500poi = time.time()
     deltaTime500poi = end_time500poi - start_time_500poi
 
@@ -100,5 +103,14 @@ def exp1():
 
 if __name__ == "__main__":
     print("start")
-    #TOP_GA_TRAIN(50,5,500)
-    exp1()
+    to = TOP_GA_TRAIN(100,15,1000, False, True)
+    tp = TOP_GA_TRAIN(400,15,1000, False, True)
+    print(f"fitness = {to.fitness}, time = {to.time}")
+    print(f"fitness = {tp.fitness}, time = {tp.time}")
+    #exp1()
+    """
+    wynik z dzieleniem fitnesa w swarmie
+
+    fitness = 0.0005376554174759646, time = 36198.300638991976
+    fitness = 0.0002465110292173232, time = 190960.97825291305
+    """

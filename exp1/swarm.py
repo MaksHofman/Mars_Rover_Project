@@ -81,14 +81,14 @@ class Swarm:
         for gp1, gp2 in zip(self.chromosome, par2.chromosome):  
             prob = random.random()
             if dynamic_mutacion == True and stagnation == True: #narazie to pominiemy
-                if prob < 0.45: 
+                if prob < 0.33: 
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
                     child_chromosome.append(parent_gene)  
-                elif prob < 0.70: 
+                elif prob < 0.66: 
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
                     child_chromosome.append(parent_gene)  
                 else: 
-                    child_chromosome.append(Swarm.mutated_genes(gp1.pois_list, gp1.rovers_count, gp1.start_position, child_chromosome))
+                    child_chromosome.append(Swarm.mutated_genes(self.pois, self.rovers_count, self.start_position, child_chromosome))
             else: # to jest defoult 10% mustacji
                 if prob < 0.45: 
                     used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
@@ -106,5 +106,5 @@ class Swarm:
         for rovers in self.chromosome:
             fitness_score += rovers.fitness
             time += rovers.time
-        return fitness_score / self.rovers_count, time
+        return fitness_score, time #(self.rovers_count * len(self.pois))
 
