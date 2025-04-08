@@ -30,7 +30,7 @@ class Swarm:
         return already_poi_list, parent_gene
     
     @classmethod
-    def check_if_rover_is_used_already(cls, chromosome, rover):
+    def check_if_rover_is_used_already(cls, chromosome, rover): # tu wruc
         is_in_chromosome = False
         for i in chromosome:
             if i.pois_list == rover.pois_list: #tu blad

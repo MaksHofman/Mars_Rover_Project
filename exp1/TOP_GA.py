@@ -103,14 +103,29 @@ def exp1():
 
 if __name__ == "__main__":
     print("start")
-    to = TOP_GA_TRAIN(100,15,1000, False, True)
-    tp = TOP_GA_TRAIN(400,15,1000, False, True)
-    print(f"fitness = {to.fitness}, time = {to.time}")
-    print(f"fitness = {tp.fitness}, time = {tp.time}")
+    start_time_500poi = time.time()
+    to = TOP_GA_TRAIN(300,15,1000, False, True)
+    end_time500poi = time.time()
+    deltaTime500poi = end_time500poi - start_time_500poi 
+    start_time_200poi = time.time()   
+    tp = TOP_GA_TRAIN(1000,26,1000, False, True)
+    end_time200poi = time.time()
+    deltaTime200poi = end_time200poi - start_time_200poi
+    print(f"fitness = {to.fitness / (to.rovers_count * len(to.pois))}, time = {to.time}, time of calkulation = {deltaTime500poi}")
+    print(f"fitness = {tp.fitness  / (tp.rovers_count * len(tp.pois))}, time = {tp.time}, time of calkulation = {deltaTime200poi}")
     #exp1()
     """
     wynik z dzieleniem fitnesa w swarmie
-
+    poi = 100, rovers = 15
     fitness = 0.0005376554174759646, time = 36198.300638991976
+    poi = 400, rovers = 15
     fitness = 0.0002465110292173232, time = 190960.97825291305
+
+    wyniki z dzielenie fitnesa poza swarmem 
+    fitness = 0.0004867869413201165, time = 34314.27292433864
+    fitness = 0.0002543448049218352, time = 196358.501228254
+    wiec parametr fitness/ poi * rover niema wplywu na dzialanie 
+
+
+    Dla 50 = 24.47069001197815,Dla 100 = 95.65448904037476,Dla 200 = 136.53235054016113,Dla 500 = 2985.691530942917 wyniki dal poi roznych ( 1/10 * poi = rover)
     """
