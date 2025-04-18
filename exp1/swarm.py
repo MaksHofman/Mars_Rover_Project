@@ -7,36 +7,9 @@ class Swarm:
     def __init__(self, start_position: Position, chromosome: list, pois:list, amout_of_rovers:int): 
         self.start_position = start_position
         self.chromosome = chromosome
-        self.rovers_count = amout_of_rovers #czesc genotypu
-        self.pois = pois #czesc genotypu
+        self.gens = [amout_of_rovers, pois]
         self.fitness, self.time = self.cal_fitness() 
     
-
-    @classmethod
-    def poi_in_list_already(cls, list, poi):
-        is_in_list = False
-        for i in list:
-            if i == poi:
-                is_in_list = True
-        return is_in_list
-    
-    @classmethod
-    def parent_gen_checking(cls, already_poi_list, parent_gene):
-        for i in reversed(range(len(parent_gene.pois_list))):
-            if Swarm.poi_in_list_already(already_poi_list, parent_gene.pois_list[i]):
-                parent_gene.pois_list.pop(i)
-            else:
-                already_poi_list.append(parent_gene.pois_list[i])
-        return already_poi_list, parent_gene
-    
-    @classmethod
-    def check_if_rover_is_used_already(cls, chromosome, rover): # tu wruc
-        is_in_chromosome = False
-        for i in chromosome:
-            if i.pois_list == rover.pois_list: #tu blad
-                is_in_chromosome == True
-        return is_in_chromosome
-
 
     @classmethod
     def create_gnome(cls, pois, amout_of_rovers, position): #trzeba sprawdzic funkcje pod kontem modulo != 0 bo smierdzi mi cos ta logika
@@ -58,29 +31,26 @@ class Swarm:
         return gens 
     
     @classmethod
-    def _creat_single_rover_poi_combo(cls, pois, amout_of_rovers, position):
-        random.shuffle(pois)
-        pois_for_rover = len(pois) // amout_of_rovers
-        slices = [pois[i*pois_for_rover:(i+1)*pois_for_rover] for i in range(amout_of_rovers)]
-        return Rover(position, slices[random.randint(0, len(slices) -1)])
-
-
-    @classmethod
-    def mutated_genes(cls, pois, rover_count, position, child_chromosome):
-        rover = 0
-        is_unique = True
-        while is_unique == True:
-            rover = Swarm._creat_single_rover_poi_combo(pois, rover_count, position)
-            is_unique = Swarm.check_if_rover_is_used_already(child_chromosome, rover)
-        if rover != 0:
-            return rover
+    def find_index_by_rover(cls, chromosome, rover):
+        for i in range(len(chromosome)):
+            if rover == chromosome[i]:
+                return i
         
     def mutate(self, amount):
         prob = random.random()
-        if prob < 0.7:
-            pass #normalna mutacja
-        else:
-            pass #omijanie poia
+        for i in range(amount):
+            if prob < 0.7:
+                chromosom = self.chromosome
+                random.shuffle(chromosom)
+                
+                pass #normalna mutacja
+            else:
+                chromosom = self.chromosome
+                random.shuffle(chromosom) 
+                rover_saved = chromosom[0]       
+                chromosom[0].pois_list.pop(random.randint(0, len(chromosom[0].pois_list)-1))    
+                chromosom[0].skipped += 1 
+                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_saved)] = chromosom[0] 
 
     def mate(self, par2, amount: int):  #
         child_chromosome = []
