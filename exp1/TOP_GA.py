@@ -10,7 +10,7 @@ Napisac sensowne experymenty
 """
 
 
-def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_eneabled, scalleble_mmutation_eneabled):
+def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_eneabled, scalleble_mmutation_eneabled): #trzeba jeszcze zmienic pod nowy swarm / rower
     Amout_of_pois = amount_of_pois
     POPULATION_SIZE = population_size
     Max_time_for_task_in_poi = 3

@@ -4,15 +4,15 @@ from rover import Rover
 
 
 class Swarm:
-    def __init__(self, start_position: Position, chromosome: list, pois:list, amout_of_rovers:int): 
+    def __init__(self, start_position: Position, chromosome: list, pois:list, amout_of_rovers:int, max_time): 
         self.start_position = start_position
         self.chromosome = chromosome
-        self.gens = [amout_of_rovers, pois]
+        self.gens = [amout_of_rovers, pois, max_time]
         self.fitness, self.time = self.cal_fitness() 
     
 
     @classmethod
-    def create_gnome(cls, pois, amout_of_rovers, position): #trzeba sprawdzic funkcje pod kontem modulo != 0 bo smierdzi mi cos ta logika
+    def create_gnome(cls, pois, amout_of_rovers, max_time, position):
         modulo = len(pois) % amout_of_rovers 
         gens = []
         random.shuffle(pois)
@@ -20,14 +20,14 @@ class Swarm:
         slices = [pois[i*pois_for_rover:(i+1)*pois_for_rover] for i in range(amout_of_rovers)]
         if modulo == 0:
             for i in range(amout_of_rovers):  
-                gens.append(Rover(position, slices[i]))
+                gens.append(Rover(position, slices[i], 0, max_time))
         else:
             extra_pois = pois[amout_of_rovers * pois_for_rover:]  
             for i in range(modulo):
                 random_rover = random.randint(0, amout_of_rovers - 1)
                 slices[random_rover].append(extra_pois[i])
             for i in range(amout_of_rovers):
-                gens.append(Rover(position, slices[i]))
+                gens.append(Rover(position, slices[i], 0, max_time))
         return gens 
     
     @classmethod
@@ -77,9 +77,7 @@ class Swarm:
             else: 
                 used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
                 child_chromosome.append(parent_gene)  
-        return Swarm(self.start_position, child_chromosome, self.pois, self.rovers_count).mutate(amount) 
-
-
+        return Swarm(self.start_position, child_chromosome, self.gens[0], self.gens[1], self.gens[2]).mutate(amount) 
 
     def cal_fitness(self):
         time = 0
