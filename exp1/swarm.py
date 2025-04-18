@@ -39,11 +39,19 @@ class Swarm:
     def mutate(self, amount):
         prob = random.random()
         for i in range(amount):
-            if prob < 0.7:
+            if prob < 0.3:
                 chromosom = self.chromosome
                 random.shuffle(chromosom)
+                rover_1 = chromosom[0]
+                rover_2 = chromosom[1]
                 
                 pass #normalna mutacja
+            elif prob < 0.6:
+                chromosom = self.chromosome
+                random.shuffle(chromosom)    
+                rover_to_save = chromosom[0]
+                random.shuffle(chromosom[0].pois_list) 
+                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_to_save)] = chromosom[0]           
             else:
                 chromosom = self.chromosome
                 random.shuffle(chromosom) 
@@ -52,7 +60,7 @@ class Swarm:
                 chromosom[0].skipped += 1 
                 self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_saved)] = chromosom[0] 
 
-    def mate(self, par2, amount: int):  #
+    def mate(self, par2, amount: int):
         child_chromosome = []
         used_poi_list = []
         for gp1, gp2 in zip(self.chromosome, par2.chromosome):  
