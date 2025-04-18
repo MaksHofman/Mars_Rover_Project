@@ -44,8 +44,14 @@ class Swarm:
                 random.shuffle(chromosom)
                 rover_1 = chromosom[0]
                 rover_2 = chromosom[1]
-                
-                pass #normalna mutacja
+                rand_poi_index_1 = random.randint(0, len(chromosom[0].pois_list)-1)
+                rand_poi_index_2 = random.randint(0, len(chromosom[1].pois_list)-1)
+                poi_1 = chromosom[0].pois_list.pop(rand_poi_index_1)
+                poi_2 = chromosom[1].pois_list.pop(rand_poi_index_2)
+                chromosom[0].pois_list.insert(rand_poi_index_1, poi_2)
+                chromosom[1].pois_list.insert(rand_poi_index_2, poi_1)
+                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_1)] = chromosom[0] 
+                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_2)] = chromosom[1] 
             elif prob < 0.6:
                 chromosom = self.chromosome
                 random.shuffle(chromosom)    
