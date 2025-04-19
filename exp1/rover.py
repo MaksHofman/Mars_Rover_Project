@@ -20,5 +20,6 @@ class Rover:
             fitness_score += (poi.priority_level/(time))
         if time > max_time:
             fitness_score - 5 # Kara za nie wyrobienie sie w czasie
-        return fitness_score - self.skipped, time
+        return fitness_score - self.skipped * 2, time # 2 to jest arbitalna kara za skippowanie poia
+    
 

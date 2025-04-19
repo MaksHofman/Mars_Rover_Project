@@ -35,49 +35,56 @@ class Swarm:
         for i in range(len(chromosome)):
             if rover == chromosome[i]:
                 return i
-        
-    def mutate(self, amount):
+            
+    @classmethod
+    def mutate(cls, chilld_chormosome, amount):
         prob = random.random()
         for i in range(amount):
             if prob < 0.3:
-                chromosom = self.chromosome
+                chromosom = chilld_chormosome
                 random.shuffle(chromosom)
                 rover_1 = chromosom[0]
                 rover_2 = chromosom[1]
+                if len(chromosom[0].pois_list) == 0:
+                    chromosom.pop(0)
+                if len(chromosom[1].pois_list) == 0:
+                    chromosom.pop(1)
                 rand_poi_index_1 = random.randint(0, len(chromosom[0].pois_list)-1)
                 rand_poi_index_2 = random.randint(0, len(chromosom[1].pois_list)-1)
                 poi_1 = chromosom[0].pois_list.pop(rand_poi_index_1)
-                poi_2 = chromosom[1].pois_list.pop(rand_poi_index_2)
+                poi_2 = chromosom[1].pois_list.pop(rand_poi_index_2-1)
                 chromosom[0].pois_list.insert(rand_poi_index_1, poi_2)
                 chromosom[1].pois_list.insert(rand_poi_index_2, poi_1)
-                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_1)] = chromosom[0] 
-                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_2)] = chromosom[1] 
+                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_1)] = chromosom[0] 
+                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_2)] = chromosom[1] 
             elif prob < 0.6:
-                chromosom = self.chromosome
+                chromosom = chilld_chormosome
                 random.shuffle(chromosom)    
                 rover_to_save = chromosom[0]
                 random.shuffle(chromosom[0].pois_list) 
-                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_to_save)] = chromosom[0]           
+                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_to_save)] = chromosom[0]           
             else:
-                chromosom = self.chromosome
+                chromosom = chilld_chormosome
                 random.shuffle(chromosom) 
                 rover_saved = chromosom[0]       
+                if len(chromosom[0].pois_list) == 0:
+                    chromosom.pop(0)
                 chromosom[0].pois_list.pop(random.randint(0, len(chromosom[0].pois_list)-1))    
                 chromosom[0].skipped += 1 
-                self.chromosome[Swarm.find_index_by_rover(self.chromosome, rover_saved)] = chromosom[0] 
+                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_saved)] = chromosom[0] 
+            return chilld_chormosome
 
     def mate(self, par2, amount: int):
         child_chromosome = []
-        used_poi_list = []
+        
         for gp1, gp2 in zip(self.chromosome, par2.chromosome):  
             prob = random.random()
             if prob < 0.5: 
-                used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp1)
-                child_chromosome.append(parent_gene)  
+                child_chromosome.append(gp1)  
             else: 
-                used_poi_list, parent_gene = Swarm.parent_gen_checking(used_poi_list, gp2)
-                child_chromosome.append(parent_gene)  
-        return Swarm(self.start_position, child_chromosome, self.gens[0], self.gens[1], self.gens[2]).mutate(amount) 
+                child_chromosome.append(gp2)  
+        child_chromosome = Swarm.mutate(child_chromosome, amount)
+        return Swarm(self.start_position, child_chromosome, self.gens[1], self.gens[0], self.gens[2]) # glupia jest tu kolejnosc [] ale boje sie kodu dotykac
 
     def cal_fitness(self):
         time = 0

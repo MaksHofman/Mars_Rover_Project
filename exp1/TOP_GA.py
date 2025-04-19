@@ -29,8 +29,8 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
     best_fitness = 0
     best_individual =0
     for _ in range(POPULATION_SIZE): 
-                chrom = Swarm.create_gnome(poi_list, amount_of_rovers, Position(0,0)) 
-                population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers)) 
+                chrom = Swarm.create_gnome(poi_list, amount_of_rovers,36000, Position(0,0)) 
+                population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers, 36000 )) 
     while not loop_after_peak == 0: 
         population = sorted(population, key=lambda x: x.fitness, reverse=True)
         if population[0].fitness >= best_fitness:  
@@ -60,15 +60,15 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         s = int((90*POPULATION_SIZE)/100) 
         for _ in range(s): 
             parent1 = random.choice(population[:50]) 
-            parent2 = random.choice(population[:50]) 
-            child = parent1.mate(parent2, scalleble_mmutation_eneabled, found) 
+            parent2 = random.choice(population[:50])
+            child = parent1.mate(parent2, len(parent1.gens[1]) // 10) 
             new_generation.append(child) 
 
 
         
         population = new_generation 
   
-        #print(f"Generation: {generation} String: {population[0].chromosome} Fitness: {population[0].fitness}") # trzeba to na wizualizacje zmienic
+        print(f"Generation: {generation} String: Fitness: {population[0].fitness}") # trzeba to na wizualizacje zmienic
         #print(f"Best fitness = {best_fitness}, Last fitness = {Last_best_fitness}, Geratiuon {generation}, found = {found}, gen till end = {loop_after_peak}")
       
         generation += 1
