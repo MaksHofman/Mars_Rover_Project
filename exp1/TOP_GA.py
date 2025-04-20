@@ -101,9 +101,9 @@ if __name__ == "__main__":
     to = TOP_GA_TRAIN(300,15,1000, False, True)
     end_time500poi = time.time()
     deltaTime500poi = end_time500poi - start_time_500poi 
-    start_time_200poi = time.time()   
-    tp = TOP_GA_TRAIN(1000,26,1000, False, True)
-    end_time200poi = time.time()
-    deltaTime200poi = end_time200poi - start_time_200poi
-    print(f"fitness = {to.fitness / (to.rovers_count * len(to.pois))}, time = {to.time}, time of calkulation = {deltaTime500poi}")
-    print(f"fitness = {tp.fitness  / (tp.rovers_count * len(tp.pois))}, time = {tp.time}, time of calkulation = {deltaTime200poi}")
+    # start_time_200poi = time.time()   
+    # tp = TOP_GA_TRAIN(1000,26,1000, False, True)
+    # end_time200poi = time.time()
+    # deltaTime200poi = end_time200poi - start_time_200poi
+    print(f"fitness = {to.fitness / (to.gens[0] * len(to.gens[1]))}, time = {to.time}, time of calkulation = {deltaTime500poi}")
+    #print(f"fitness = {tp.fitness  / (tp.rovers_count * len(tp.pois))}, time = {tp.time}, time of calkulation = {deltaTime200poi}")

@@ -13,4 +13,3 @@ To do:
 Możliwy rozwoj:
 1. Unikniecie duplikatow w krzyzowaniu.
 2. krzyzowanei elitarystyczne (Pierwszeństwo maja rovery z najwiekszym fitness scorem)
-3. 

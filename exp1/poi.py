@@ -25,6 +25,9 @@ class Poi:
         self.time_of_task = time_of_task
         self.position = position
         self.priority_level = priority_level
+
+    def __eq__(self, other):
+        return isinstance(other, Poi) and self.time_of_task == other.time_of_task and self.position == other.position and self.priority_level == other.priority_level 
     
     def __str__(self):
         return f"Poi nr: {self.poi_number} czas: {self.time_of_task}, position: {self.position}, priority: {self.priority_level}"

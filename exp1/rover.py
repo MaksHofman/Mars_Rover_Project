@@ -8,6 +8,9 @@ class Rover:
         self.skipped = pois_skipped
         self.fitness, self.time = self.cal_fitness(max_time) 
 
+    def __eq__(self, other):
+        return isinstance(other, Rover) and self.pois_list == other.pois_list 
+    
     def cal_path_cost(self, end_point, hour_per_distance_unit):
         return Position.check_distance(self.position, end_point) * hour_per_distance_unit
 
@@ -20,6 +23,6 @@ class Rover:
             fitness_score += (poi.priority_level/(time))
         if time > max_time:
             fitness_score - 5 # Kara za nie wyrobienie sie w czasie
-        return fitness_score - self.skipped * 2, time # 2 to jest arbitalna kara za skippowanie poia
+        return fitness_score - (self.skipped * 1.5 * (fitness_score / len(self.pois_list))), time # 2 to jest arbitalna kara za skippowanie poia
     
 

@@ -1,7 +1,7 @@
 import random
 from poi import Position, Poi
 from rover import Rover
-
+import copy
 
 class Swarm:
     def __init__(self, start_position: Position, chromosome: list, pois:list, amout_of_rovers:int, max_time): 
@@ -35,50 +35,31 @@ class Swarm:
         for i in range(len(chromosome)):
             if rover == chromosome[i]:
                 return i
-            
+
+    
     @classmethod
     def mutate(cls, chilld_chormosome, amount):
-        prob = random.random()
         for i in range(amount):
+            prob = random.random()
+            random.shuffle(chilld_chormosome) 
             if prob < 0.45:
-                chromosom = chilld_chormosome
-                random.shuffle(chromosom)
-                rover_1 = chromosom[0]
-                rover_2 = chromosom[1]
-                while len(chromosom[0].pois_list) == 0:
-                    chromosom.pop(0)
-                    chilld_chormosome.pop(Swarm.find_index_by_rover(chilld_chormosome, rover_1))
-                    rover_1 = chromosom[0] 
-                while len(chromosom[1].pois_list) == 0:
-                    chromosom.pop(1)
-                    chilld_chormosome.pop(Swarm.find_index_by_rover(chilld_chormosome, rover_2))
-                    rover_2 = chromosom[1] 
-                rand_poi_index_1 = random.randint(0, len(chromosom[0].pois_list)-1)
-                rand_poi_index_2 = random.randint(0, len(chromosom[1].pois_list)-1)
-                poi_1 = chromosom[0].pois_list.pop(rand_poi_index_1)
-                poi_2 = chromosom[1].pois_list.pop(rand_poi_index_2-1)
-                chromosom[0].pois_list.insert(rand_poi_index_1, poi_2)
-                chromosom[1].pois_list.insert(rand_poi_index_2, poi_1)
-                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_1)] = chromosom[0] 
-                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_2)] = chromosom[1] 
-            elif prob < 0.9:
-                chromosom = chilld_chormosome
-                random.shuffle(chromosom)    
-                rover_to_save = chromosom[0]
-                random.shuffle(chromosom[0].pois_list) 
-                chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_to_save)] = chromosom[0]           
-            # else:
-            #     chromosom = chilld_chormosome
-            #     random.shuffle(chromosom) 
-            #     rover_saved = chromosom[0]       
-            #     while len(chromosom[0].pois_list) == 0:
-            #         chromosom.pop(0)
-            #         chilld_chormosome.pop(Swarm.find_index_by_rover(chilld_chormosome, rover_saved))
-            #         rover_saved = chromosom[0] 
-            #     chromosom[0].pois_list.pop(random.randint(0, len(chromosom[0].pois_list)-1))    
-            #     chromosom[0].skipped += 1 
-            #     chilld_chormosome[Swarm.find_index_by_rover(chilld_chormosome, rover_saved)] = chromosom[0] 
-            return chilld_chormosome
+                rand_poi_index_1 = random.randint(0, len(chilld_chormosome[0].pois_list)-1)
+                rand_poi_index_2 = random.randint(0, len(chilld_chormosome[1].pois_list)-1)
+                poi_1 = chilld_chormosome[0].pois_list.pop(rand_poi_index_1)
+                poi_2 = chilld_chormosome[1].pois_list.pop(rand_poi_index_2-1)
+                chilld_chormosome[0].pois_list.insert(rand_poi_index_1, poi_2)
+                chilld_chormosome[1].pois_list.insert(rand_poi_index_2, poi_1)
+              
+            elif prob < 0.9:  
+                random.shuffle(chilld_chormosome[0].pois_list)            
+            
+            else:  
+                if len(chilld_chormosome[0].pois_list) <= 2:
+                    break
+                chilld_chormosome[0].pois_list.pop(random.randint(0, len(chilld_chormosome[0].pois_list)-1))             
+                chilld_chormosome[0].skipped += 1  
+
+        return chilld_chormosome
 
     def mate(self, par2, amount: int):
         child_chromosome = []
