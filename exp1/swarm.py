@@ -53,7 +53,7 @@ class Swarm:
             elif prob < 0.9:  
                 random.shuffle(chilld_chormosome[0].pois_list)            
             
-            else:  
+            elif prob >= 0.9:  
                 if len(chilld_chormosome[0].pois_list) <= 2:
                     break
                 chilld_chormosome[0].pois_list.pop(random.randint(0, len(chilld_chormosome[0].pois_list)-1))             

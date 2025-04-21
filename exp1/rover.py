@@ -22,7 +22,9 @@ class Rover:
             self.position = poi.position #tu zmnieniamy pozycje lazika
             fitness_score += (poi.priority_level/(time))
         if time > max_time:
-            fitness_score - 5 # Kara za nie wyrobienie sie w czasie
-        return fitness_score - (self.skipped * 1.5 * (fitness_score / len(self.pois_list))), time # 2 to jest arbitalna kara za skippowanie poia
+            fitness_score - 5000000000# Kara za nie wyrobienie sie w czasie
+        fitness_score = fitness_score - (self.skipped * 1.5 * (fitness_score / len(self.pois_list)))
+        print(fitness_score)
+        return fitness_score, time
     
 
