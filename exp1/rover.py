@@ -2,11 +2,16 @@ import random
 from poi import Position, Poi
 
 class Rover:
-    def __init__(self, position: Position, pois_list: list, pois_skipped: int, max_time): 
-        self.position = position
+    def __init__(self, position: Position, pois_list: list, skipped: int, max_time): 
+        self.start_position = position
+        self.position = self.start_position
         self.pois_list = pois_list
-        self.skipped = pois_skipped
+        self.skipped = skipped
+        self.max_time = max_time
         self.fitness, self.time = self.cal_fitness(max_time) 
+
+    def add_1_to_skipped(self):
+        self.skipped = self.skipped + 1
 
     def __eq__(self, other):
         return isinstance(other, Rover) and self.pois_list == other.pois_list 
@@ -22,9 +27,8 @@ class Rover:
             self.position = poi.position #tu zmnieniamy pozycje lazika
             fitness_score += (poi.priority_level/(time))
         if time > max_time:
-            fitness_score - 5000000000# Kara za nie wyrobienie sie w czasie
-        fitness_score = fitness_score - (self.skipped * 1.5 * (fitness_score / len(self.pois_list)))
-        print(fitness_score)
+            fitness_score - 50# Kara za nie wyrobienie sie w czasie
+        fitness_score = fitness_score - (self.skipped * 2 * (fitness_score / len(self.pois_list)))
         return fitness_score, time
     
 

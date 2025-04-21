@@ -28,7 +28,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
                 population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers, 36000 )) 
     while not loop_after_peak == 0: 
         population = sorted(population, key=lambda x: x.fitness, reverse=True)
-
+        best_of_every_gen.append(population[0])
         if population[0].fitness >= best_fitness:  
             Last_best_fitness = best_fitness
             best_fitness = population[0].fitness
@@ -48,8 +48,8 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         if max_itter == generation and max_itter_eneabled:
             loop_after_peak = 0
 
-        if found != True:
-            best_of_every_gen.append(population[0])
+        # if found != True:
+        #     best_of_every_gen.append(population[0])
 
         new_generation = [] # od tego punktu nie dziala (nowe generacje sie zle tworza(sa takie same))
 
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     to, arra = TOP_GA_TRAIN(300,15,1000, False, True)
     end_time500poi = time.time()
     deltaTime500poi = end_time500poi - start_time_500poi 
-    
+    wizualizuj_generacje(arra)
     wizualiacja_skippowania_poi(arra)
     # start_time_200poi = time.time()   
     # tp = TOP_GA_TRAIN(1000,26,1000, False, True)

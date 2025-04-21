@@ -9,7 +9,7 @@ class Swarm:
         self.chromosome = chromosome
         self.gens = [amout_of_rovers, pois, max_time]
         self.fitness, self.time = self.cal_fitness() 
-    
+      
 
     @classmethod
     def create_gnome(cls, pois, amout_of_rovers, max_time, position):
@@ -49,16 +49,22 @@ class Swarm:
                 poi_2 = chilld_chormosome[1].pois_list.pop(rand_poi_index_2-1)
                 chilld_chormosome[0].pois_list.insert(rand_poi_index_1, poi_2)
                 chilld_chormosome[1].pois_list.insert(rand_poi_index_2, poi_1)
+                rov1 = chilld_chormosome.pop(0)
+                rov2 = chilld_chormosome.pop(0)
+                chilld_chormosome.insert(0, Rover(rov1.start_position, rov1.pois_list, rov1.skipped, rov1.max_time))
+                chilld_chormosome.insert(1, Rover(rov2.start_position, rov2.pois_list, rov2.skipped, rov2.max_time))
               
-            elif prob < 0.9:  
+            elif prob < 0.99:  
                 random.shuffle(chilld_chormosome[0].pois_list)            
-            
-            elif prob >= 0.9:  
+                rover = chilld_chormosome.pop(0)
+                chilld_chormosome.insert(0, Rover(rover.start_position, rover.pois_list, rover.skipped, rover.max_time))
+            elif prob >= 0.99:  
                 if len(chilld_chormosome[0].pois_list) <= 2:
                     break
                 chilld_chormosome[0].pois_list.pop(random.randint(0, len(chilld_chormosome[0].pois_list)-1))             
-                chilld_chormosome[0].skipped += 1  
-
+                chilld_chormosome[0].add_1_to_skipped()
+                rover = chilld_chormosome.pop(0)
+                chilld_chormosome.insert(0, Rover(rover.start_position, rover.pois_list, rover.skipped, rover.max_time))
         return chilld_chormosome
 
     def mate(self, par2, amount: int):

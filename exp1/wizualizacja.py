@@ -36,7 +36,17 @@ def wizualizuj_osobnika(osobnik: Swarm):
     plt.show()
 
 def wizualizuj_generacje(generacja: list[Swarm]):
-    pass
+    iteracje = list(range(len(generacja)))
+    fitness_scores = [swarm.fitness for swarm in generacja]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(iteracje, fitness_scores, marker='o', linestyle='-', color='blue')
+    plt.xlabel('Numer osobnika w generacji')
+    plt.ylabel('Fitness score')
+    plt.title('Fitness osobników w generacji')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
 
 def wizualiacja_skippowania_poi(najlepsze_osobniki_z_kazdej_generacji: list[Swarm]):
     generacje = list(range(len(najlepsze_osobniki_z_kazdej_generacji)))
@@ -54,3 +64,4 @@ def wizualiacja_skippowania_poi(najlepsze_osobniki_z_kazdej_generacji: list[Swar
     plt.grid(axis='y', linestyle='--', alpha=0.7)
     plt.tight_layout()
     plt.show()
+
