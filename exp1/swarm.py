@@ -54,11 +54,11 @@ class Swarm:
                 chilld_chormosome.insert(0, Rover(rov1.start_position, rov1.pois_list, rov1.skipped, rov1.max_time))
                 chilld_chormosome.insert(1, Rover(rov2.start_position, rov2.pois_list, rov2.skipped, rov2.max_time))
               
-            elif prob < 0.99:  
+            elif prob < 0.9:  
                 random.shuffle(chilld_chormosome[0].pois_list)            
                 rover = chilld_chormosome.pop(0)
                 chilld_chormosome.insert(0, Rover(rover.start_position, rover.pois_list, rover.skipped, rover.max_time))
-            elif prob >= 0.99:  
+            elif prob >= 0.9:  
                 if len(chilld_chormosome[0].pois_list) <= 2:
                     break
                 chilld_chormosome[0].pois_list.pop(random.randint(0, len(chilld_chormosome[0].pois_list)-1))             

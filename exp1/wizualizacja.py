@@ -48,6 +48,19 @@ def wizualizuj_generacje(generacja: list[Swarm]):
     plt.tight_layout()
     plt.show()
 
+def wizualizuj_timr_generacje(generacja: list[Swarm]):
+    iteracje = list(range(len(generacja)))
+    fitness_scores = [swarm.time for swarm in generacja]
+
+    plt.figure(figsize=(10, 6))
+    plt.plot(iteracje, fitness_scores, marker='o', linestyle='-', color='blue')
+    plt.xlabel('Numer osobnika w generacji')
+    plt.ylabel('time')
+    plt.title('time osobników w generacji')
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()
+
 def wizualiacja_skippowania_poi(najlepsze_osobniki_z_kazdej_generacji: list[Swarm]):
     generacje = list(range(len(najlepsze_osobniki_z_kazdej_generacji)))
     skipniete_poi = []

@@ -60,7 +60,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
         for _ in range(s): 
             parent1 = random.choice(population[:50]) 
             parent2 = random.choice(population[:50])
-            child = parent1.mate(parent2, len(parent1.gens[1]) // 100) 
+            child = parent1.mate(parent2, len(parent1.gens[1]) // 10) 
             new_generation.append(child) 
 
 
@@ -106,6 +106,7 @@ if __name__ == "__main__":
     to, arra = TOP_GA_TRAIN(300,15,1000, False, True)
     end_time500poi = time.time()
     deltaTime500poi = end_time500poi - start_time_500poi 
+    wizualizuj_timr_generacje(arra)
     wizualizuj_generacje(arra)
     wizualiacja_skippowania_poi(arra)
     # start_time_200poi = time.time()   

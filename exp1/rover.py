@@ -28,7 +28,7 @@ class Rover:
             fitness_score += (poi.priority_level/(time))
         if time > max_time:
             fitness_score - 50# Kara za nie wyrobienie sie w czasie
-        fitness_score = fitness_score - (self.skipped * 2 * (fitness_score / len(self.pois_list)))
+        fitness_score = fitness_score - (self.skipped * (fitness_score / len(self.pois_list))* 3)
         return fitness_score, time
     
 
