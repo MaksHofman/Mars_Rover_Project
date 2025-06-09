@@ -1,5 +1,0 @@
-Rozwiązanie TOP zapomocą GA(standardowe podejście(w 1 kroku wszystko liczone))
-Cel eksperymentu:
-1. Zbadac po ilu poiach/roverach czas obliczen bedzie nieakceptowalny.
-2. Zbadac uzytecznosc mutacji zmieniajacej sie przeciw proporcjonalnie do iteracji/lub zwiekszycz podczas stagnacji.
-3. Ustalic odpowiednie wagi dla poi i omijania zadania.
