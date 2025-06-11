@@ -23,7 +23,7 @@ class Rover:
         time = 0
         fitness_score = 0
         for poi in self.pois_list:
-            time += (self.cal_path_cost(poi.position, 1.0) + poi.time_of_task) #tu oblicznamy czas dla kazdego poia + czas dojechania tam
+            time += (self.cal_path_cost(poi.position, 0.16) + poi.time_of_task) #tu oblicznamy czas dla kazdego poia + czas dojechania tam
             self.position = poi.position #tu zmnieniamy pozycje lazika
             fitness_score += (poi.priority_level/(time))
         if time > max_time:

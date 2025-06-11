@@ -1,5 +1,7 @@
 import matplotlib.pyplot as plt
 import matplotlib.cm as cm
+import numpy as np
+import math
 from swarm import Swarm
 
 def wizualizuj_osobnika(osobnik: Swarm):
@@ -78,3 +80,49 @@ def wizualiacja_skippowania_poi(najlepsze_osobniki_z_kazdej_generacji: list[Swar
     plt.tight_layout()
     plt.show()
 
+
+
+def visualize_swarm_paths(swarm):
+    fig, ax = plt.subplots(figsize=(12, 8))
+
+    rovers = swarm.chromosome
+    num_rovers = len(rovers)
+    colors = cm.tab20(np.linspace(0, 1, num_rovers))
+
+    for idx, rover in enumerate(rovers):
+        visited_pois = []
+        current_pos = rover.start_position
+        total_time = 0
+
+        for poi in rover.pois_list:
+            distance = math.sqrt(
+                (current_pos.x - poi.position.x) ** 2 + 
+                (current_pos.y - poi.position.y) ** 2
+            )
+            time_needed = distance + poi.time_of_task  # <-- TU BYŁA ZMIANA
+            if total_time + time_needed <= rover.max_time:
+                visited_pois.append(poi)
+                total_time += time_needed
+                current_pos = poi.position
+            else:
+                break
+
+        path = [rover.start_position] + [poi.position for poi in visited_pois]
+        x_vals = [p.x for p in path]
+        y_vals = [p.y for p in path]
+        ax.plot(x_vals, y_vals, linestyle='-', linewidth=2.0, color=colors[idx], label=f'Rover {idx+1}')
+
+        for poi in visited_pois:
+            ax.scatter(poi.position.x, poi.position.y, color=colors[idx], s=30, alpha=0.7)
+
+    # Start position (zielona kropka)
+    ax.scatter(rovers[0].start_position.x, rovers[0].start_position.y, color='green', s=100, label='Start')
+
+    ax.set_title('Trasy wszystkich roverów w swarmie')
+    ax.set_xlabel('X')
+    ax.set_ylabel('Y')
+    ax.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    ax.grid(True)
+    plt.axis('equal')
+    plt.tight_layout()
+    plt.show()

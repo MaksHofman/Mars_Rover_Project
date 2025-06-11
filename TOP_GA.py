@@ -12,6 +12,7 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
     Max_Y_bound = 1000
     Max_piority = 5
     max_itter = 10000
+    time_of_mission = 2160 #tyle h jest w 90 dniach
     global poi_list
     poi_list = Poi.gen_random_list_of_pois(Amout_of_pois, Max_time_for_task_in_poi, Max_X_bound, Max_Y_bound, Max_piority)
     Last_best_fitness = 0
@@ -24,8 +25,8 @@ def TOP_GA_TRAIN(amount_of_pois, amount_of_rovers, population_size, max_itter_en
     best_individual =0
     best_of_every_gen = []
     for _ in range(POPULATION_SIZE): 
-                chrom = Swarm.create_gnome(poi_list, amount_of_rovers,36000, Position(0,0)) 
-                population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers, 36000 )) 
+                chrom = Swarm.create_gnome(poi_list, amount_of_rovers, time_of_mission, Position(0,0)) 
+                population.append(Swarm(Position(0,0),chrom, poi_list, amount_of_rovers, time_of_mission )) 
     while not loop_after_peak == 0: 
         population = sorted(population, key=lambda x: x.fitness, reverse=True)
         best_of_every_gen.append(population[0])
@@ -106,6 +107,7 @@ if __name__ == "__main__":
     to, arra = TOP_GA_TRAIN(300,15,1000, False, True)
     end_time500poi = time.time()
     deltaTime500poi = end_time500poi - start_time_500poi 
+    visualize_swarm_paths(to)
     wizualizuj_timr_generacje(arra)
     wizualizuj_generacje(arra)
     wizualiacja_skippowania_poi(arra)
